@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
-            $table->tinyInteger('role')->comment('1 - Administrador. 2 - Colaborador, 3 - Cliente.');
+            $table->tinyInteger('role')->comment('1 - Administrador, 2 - Sócio, 3 - Colaborador, 4 - Cliente.');
             $table->timestamps();
         });
     }

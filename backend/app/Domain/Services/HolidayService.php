@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Domain\Services;
+namespace App\Domain\Services;
 
 use Illuminate\Database\Eloquent\Collection;
 use app\Domain\Entities\Holiday;
@@ -25,6 +25,17 @@ class HolidayService implements IHolidayService
     public function one($id): Holiday
     {
         return Holiday::findOrFail($id);
+    }
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    public function delete($id): Holiday
+    {
+        $holiday = Holiday::findOrFail($id);
+        return $holiday->delete();
     }
 
     /**

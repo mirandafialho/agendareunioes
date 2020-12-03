@@ -1,9 +1,9 @@
 <?php
 
-namespace app\Domain\Interfaces;
+namespace App\Domain\Interfaces;
 
 use Illuminate\Database\Eloquent\Collection;
-use app\Domain\Entities\Client;
+use App\Domain\Entities\Client;
 
 /**
  * Interface IClientService.
@@ -15,4 +15,5 @@ interface IClientService
 	public function all(): Collection;
 	public function one($id = null): Client;
 	public function save($id = null, array $data): Client;
+	public function delete($id = null): Client;
 } 

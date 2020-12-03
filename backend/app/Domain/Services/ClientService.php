@@ -1,9 +1,10 @@
 <?php
 
-namespace app\Domain\Services;
+namespace App\Domain\Services;
 
 use Illuminate\Database\Eloquent\Collection;
-use app\Domain\Entities\Client;
+use App\Domain\Interfaces\IClientService;
+use App\Domain\Entities\Client;
 
 class ClientService implements IClientService 
 {
@@ -22,7 +23,7 @@ class ClientService implements IClientService
      *
      * @var string
      */
-    public function one($id): Client
+    public function one($id = null): Client
     {
         return Client::findOrFail($id);
     }
@@ -37,6 +38,17 @@ class ClientService implements IClientService
         return Client::updateOrCreate([
             'id' => $id
         ], $data);
+    }
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    public function delete($id = null): Client
+    {
+        $client = Client::findOrFail($id);
+        return $client->delete();
     }
 
     /**

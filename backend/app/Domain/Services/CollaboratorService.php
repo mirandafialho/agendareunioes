@@ -1,6 +1,6 @@
 <?php
 
-namespace app\Domain\Services;
+namespace App\Domain\Services;
 
 use Illuminate\Database\Eloquent\Collection;
 use app\Domain\Entities\Collaborator;
@@ -25,6 +25,17 @@ class CollaboratorService implements ICollaboratorService
     public function one($id): Collaborator
     {
         return Collaborator::findOrFail($id);
+    }
+
+    /**
+     * The table associated with the model.
+     *
+     * @var string
+     */
+    public function delete($id): Collaborator
+    {
+        $collaborator = Collaborator::findOrFail($id);
+        return $collaborator->delete();
     }
 
     /**
