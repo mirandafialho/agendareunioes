@@ -3,7 +3,8 @@
 namespace App\Domain\Services;
 
 use Illuminate\Database\Eloquent\Collection;
-use app\Domain\Entities\Collaborator;
+use App\Domain\Interfaces\ICollaboratorService;
+use App\Domain\Entities\Collaborator;
 
 class CollaboratorService implements ICollaboratorService 
 {
@@ -48,5 +49,16 @@ class CollaboratorService implements ICollaboratorService
         return Collaborator::updateOrCreate([
             'id' => $id
         ], $data);
+    }
+
+    /**
+     * Scope a query to only include active clients.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('active', 1);
     }
 }

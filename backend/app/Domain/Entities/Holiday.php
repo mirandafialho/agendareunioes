@@ -3,7 +3,6 @@
 namespace App\Domain\Entities;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class Holiday.
@@ -12,8 +11,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class Holiday extends Model 
 {
-	use SoftDeletes;
-	
 	/**
 	 * The table associated with the model.
 	 *
@@ -21,5 +18,4 @@ class Holiday extends Model
 	 */
 	protected $table = 'holidays';
 
-	
 }

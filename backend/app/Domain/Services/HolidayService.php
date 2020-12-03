@@ -3,7 +3,8 @@
 namespace App\Domain\Services;
 
 use Illuminate\Database\Eloquent\Collection;
-use app\Domain\Entities\Holiday;
+use App\Domain\Interfaces\IHolidayService;
+use App\Domain\Entities\Holiday;
 
 class HolidayService implements IHolidayService 
 {

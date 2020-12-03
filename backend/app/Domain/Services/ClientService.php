@@ -23,7 +23,7 @@ class ClientService implements IClientService
      *
      * @var string
      */
-    public function one($id = null): Client
+    public function one($id): Client
     {
         return Client::findOrFail($id);
     }
@@ -45,7 +45,7 @@ class ClientService implements IClientService
      *
      * @var string
      */
-    public function delete($id = null): Client
+    public function delete($id): Client
     {
         $client = Client::findOrFail($id);
         return $client->delete();

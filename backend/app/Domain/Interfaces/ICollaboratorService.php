@@ -3,7 +3,7 @@
 namespace App\Domain\Interfaces;
 
 use Illuminate\Database\Eloquent\Collection;
-use app\Domain\Entities\Collaborator;
+use App\Domain\Entities\Collaborator;
 
 /**
  * Interface ICollaboratorService.
@@ -13,7 +13,7 @@ use app\Domain\Entities\Collaborator;
 interface ICollaboratorService 
 {
 	public function all(): Collection;
-	public function one($id = null): Collaborator;
+	public function one($id): Collaborator;
 	public function save($id = null, array $data): Collaborator;
 	public function delete($id): Collaborator;
 } 

@@ -13,7 +13,7 @@ use App\Domain\Entities\Client;
 interface IClientService 
 {
 	public function all(): Collection;
-	public function one($id = null): Client;
+	public function one($id): Client;
 	public function save($id = null, array $data): Client;
-	public function delete($id = null): Client;
+	public function delete($id): Client;
 } 
