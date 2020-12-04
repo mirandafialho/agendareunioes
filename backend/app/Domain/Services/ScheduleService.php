@@ -3,7 +3,8 @@
 namespace App\Domain\Services;
 
 use Illuminate\Database\Eloquent\Collection;
-use app\Domain\Entities\Schedule;
+use App\Domain\Interfaces\IScheduleService;
+use App\Domain\Entities\Schedule;
 
 class ScheduleService implements IScheduleService 
 {
