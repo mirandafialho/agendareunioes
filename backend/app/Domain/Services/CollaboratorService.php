@@ -9,9 +9,7 @@ use App\Domain\Entities\Collaborator;
 class CollaboratorService implements ICollaboratorService 
 {
     /**
-     * The table associated with the model.
-     *
-     * @var string
+     * Collection de colaboradores.
      */
     public function all(): Collection
     {
@@ -19,9 +17,10 @@ class CollaboratorService implements ICollaboratorService
     }
 
     /**
-     * The table associated with the model.
+     * Retorna um registro de colaborador.
      *
-     * @var string
+     * @var integer $id
+     * @return Collaborator
      */
     public function one($id): Collaborator
     {
@@ -29,9 +28,10 @@ class CollaboratorService implements ICollaboratorService
     }
 
     /**
-     * The table associated with the model.
+     * Deletar um registro de colaborador.
      *
-     * @var string
+     * @var integer $id
+     * @return Collaborator
      */
     public function delete($id): Collaborator
     {
@@ -40,9 +40,11 @@ class CollaboratorService implements ICollaboratorService
     }
 
     /**
-     * The table associated with the model.
+     * Salvar colaborador.
      *
-     * @var string
+     * @var integer $id
+     * @var array $data
+     * @return Collaborator
      */
     public function save($id = null, array $data): Collaborator
     {
