@@ -9,9 +9,7 @@ use App\Domain\Entities\Client;
 class ClientService implements IClientService 
 {
     /**
-     * The table associated with the model.
-     *
-     * @var string
+     * Collection de clientes.
      */
     public function all(): Collection
     {
@@ -19,9 +17,10 @@ class ClientService implements IClientService
     }
 
     /**
-     * The table associated with the model.
+     * Retorna um registro de cliente.
      *
-     * @var string
+     * @var integer $id
+     * @return Client
      */
     public function one($id): Client
     {
@@ -29,9 +28,11 @@ class ClientService implements IClientService
     }
 
     /**
-     * The table associated with the model.
+     * Salvar cliente.
      *
-     * @var string
+     * @var integer $id
+     * @var array $data
+     * @return Client
      */
     public function save($id = null, array $data): Client
     {
@@ -41,9 +42,10 @@ class ClientService implements IClientService
     }
 
     /**
-     * The table associated with the model.
+     * Deletar um registro de cliente.
      *
-     * @var string
+     * @var integer $id
+     * @return Client
      */
     public function delete($id): Client
     {

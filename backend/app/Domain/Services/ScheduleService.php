@@ -9,9 +9,7 @@ use App\Domain\Entities\Schedule;
 class ScheduleService implements IScheduleService 
 {
     /**
-     * The table associated with the model.
-     *
-     * @var string
+     * Collection de agendas.
      */
     public function all(): Collection
     {
@@ -19,9 +17,10 @@ class ScheduleService implements IScheduleService
     }
 
     /**
-     * The table associated with the model.
+     * Retorna um registro de agenda.
      *
-     * @var string
+     * @var integer $id
+     * @return Schedule
      */
     public function one($id): Schedule
     {
@@ -29,9 +28,10 @@ class ScheduleService implements IScheduleService
     }
 
     /**
-     * The table associated with the model.
+     * Deletar um registro de agenda.
      *
-     * @var string
+     * @var integer $id
+     * @return Schedule
      */
     public function delete($id): Schedule
     {
@@ -40,9 +40,11 @@ class ScheduleService implements IScheduleService
     }
 
     /**
-     * The table associated with the model.
+     * Salvar agenda.
      *
-     * @var string
+     * @var integer $id
+     * @var array $data
+     * @return Schedule
      */
     public function save($id = null, array $data): Schedule
     {

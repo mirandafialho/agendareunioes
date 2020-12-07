@@ -9,9 +9,7 @@ use App\Domain\Entities\Holiday;
 class HolidayService implements IHolidayService 
 {
     /**
-     * The table associated with the model.
-     *
-     * @var string
+     * Collection de feriados.
      */
     public function all(): Collection
     {
@@ -19,9 +17,10 @@ class HolidayService implements IHolidayService
     }
 
     /**
-     * The table associated with the model.
+     * Retorna um registro de feriado.
      *
-     * @var string
+     * @var integer $id
+     * @return Holiday
      */
     public function one($id): Holiday
     {
@@ -29,9 +28,10 @@ class HolidayService implements IHolidayService
     }
 
     /**
-     * The table associated with the model.
+     * Deletar um registro de feriado.
      *
-     * @var string
+     * @var integer $id
+     * @return Holiday
      */
     public function delete($id): Holiday
     {
@@ -40,9 +40,11 @@ class HolidayService implements IHolidayService
     }
 
     /**
-     * The table associated with the model.
+     * Salvar feriado.
      *
-     * @var string
+     * @var integer $id
+     * @var array $data
+     * @return Holiday
      */
     public function save($id = null, array $data): Holiday
     {
