@@ -41,7 +41,7 @@
 		<router-view />
 		<b-navbar fixed="bottom" class="footer-copy">
 			<b-collapse id="nav-text-collapse" is-nav>
-				<b-navbar-nav align="center">
+				<b-navbar-nav>
 					<b-nav-item>
 						<span>&copy; Miranda Fialho</span>
 					</b-nav-item>
