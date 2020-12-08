@@ -26,33 +26,104 @@
                 </template>
             </FullCalendar>
         </div>
-        <b-modal id="modal-schedule" ref="schedule-modal" title="Agenda" hide-footer>
-            <b>Título</b>
+        <b-modal id="modal-schedule" ref="modal-schedule" title="Agenda" hide-footer>
             <p>
+                <b>Título: </b>
                 <span>{{ event.title }}</span>
             </p>
-            <b>Descrição</b>
             <p>
+                <b>Descrição: </b>
                 <span>{{ event.description }}</span>
             </p>
             <p>
-                <b>Início</b>
-                <span>{{ event.beginning_date }}</span>
-                <b>Fim</b>
-                <span>{{ event.conclusion_date }}</span>
-                <b>Duração</b>
+                <b>Início: </b>
+                <span>{{ event.start }}</span>
+            </p>
+            <p>
+                <b>Fim: </b>
+                <span>{{ event.end }}</span>
+            </p>
+            <p>
+                <b>Duração: </b>
                 <span>{{ event.duration }}</span>
             </p>
             <p>
-                <b>Solicitante</b>
-                <span>{{ event.beginning_date }}</span>
-                <b>Convidado</b>
-                <span>{{ event.conclusion_date }}</span>
+                <b>Solicitante: </b>
+                <span>{{ event.requester }}</span>
             </p>
             <p>
-                <b>Aceito</b>
+                <b>Convidado: </b>
+                <span>{{ event.guest }}</span>
+            </p>
+            <p>
+                <b>Aceito: </b>
                 <span>{{ event.accept ? 'Sim' : 'Não' }}</span>
             </p>
+        </b-modal>
+        <b-modal id="modal-new-schedule" ref="modal-new-schedule" title="Novo Evento" hide-footer>
+            <b-form>
+                <b-form-input id="schedule-id" v-model="event.id" hidden="hidden"></b-form-input>
+                <b-form-group id="input-group-2" label="Título:" label-for="titulo">
+                    <b-form-input
+                        id="schedule-title"
+                        v-model="event.title"
+                        required
+                        placeholder="Título do evento"
+                    ></b-form-input>
+                </b-form-group>
+
+                <b-form-group id="input-group-3" label="Descrição:" label-for="descricao">
+                    <b-form-input
+                        id="schedule-description"
+                        v-model="event.description"
+                        required
+                        placeholder="Descrição do evento"
+                    ></b-form-input>
+                </b-form-group>
+
+                <b-form-group id="input-group-4" label="Início:" label-for="inicio">
+                    <b-form-datepicker
+                        id="schedule-start"
+                        v-model="event.startDate"
+                        required
+                        placeholder="Início do evento"
+                    ></b-form-datepicker>
+                </b-form-group>
+
+                <b-form-group id="input-group-5" label="" label-for="">
+                    <b-form-timepicker
+                        id="schedule-start-time"
+                        v-model="event.startTime"
+                        required
+                        placeholder="Horário de fim."
+                    ></b-form-timepicker>
+                </b-form-group>
+
+                <b-form-group id="input-group-6" label="Fim:" label-for="fim">
+                    <b-form-datepicker
+                        id="schedule-end"
+                        v-model="event.endDate"
+                        required
+                        placeholder="Fim do evento"
+                    ></b-form-datepicker>
+                </b-form-group>
+
+                <b-form-group id="input-group-7" label="" label-for="">
+                    <b-form-timepicker
+                        id="schedule-end-time"
+                        v-model="event.endTime"
+                        required
+                        placeholder="Horário de fim."
+                    ></b-form-timepicker>
+                </b-form-group>
+
+                <hr>
+
+                <div class="buttons-new-client">
+                    <b-button type="submit" variant="success">Cadastrar</b-button>
+                    <b-button type="reset" variant="danger">Limpar</b-button>
+                </div>
+            </b-form>
         </b-modal>
     </div>
 </template>
@@ -62,8 +133,8 @@ import FullCalendar from '@fullcalendar/vue'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import { createEventId } from './event-utils'
-import ScheduleDataService from '@/services/ClientDataService'
+import brLocale from "@fullcalendar/core/locales/pt-br";
+import ScheduleDataService from '@/services/ScheduleDataService'
 
 export default {
     name: 'Schedule',
@@ -73,6 +144,7 @@ export default {
     data () {
         return {
             calendarOptions: {
+                locale: brLocale,
                 plugins: [
                     dayGridPlugin,
                     timeGridPlugin,
@@ -84,8 +156,9 @@ export default {
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
                 },
                 initialView: 'dayGridMonth',
-                //initialEvents: INITIAL_EVENTS, // alternatively, use the `events` setting to fetch from a feed
                 events: [],
+                eventColor: '#2c3e50',
+                navLinks: true,
                 editable: true,
                 selectable: true,
                 selectMirror: true,
@@ -101,14 +174,16 @@ export default {
                 */
             },
             event: [],
-            currentEvents: []
         }
+    },
+    created() {
+        this.getEvents()
     },
     methods: {
         getEvents() {
             ScheduleDataService.getAll()
                 .then(response => {
-                    this.events = response.data
+                    this.calendarOptions.events = response.data
                     console.log(response.data)
                 })
                 .catch(e => {
@@ -116,47 +191,44 @@ export default {
                 })
         },
         handleDateSelect(selectInfo) {
-            let title = prompt('Please enter a new title for your event')
-            let calendarApi = selectInfo.view.calendar
-            calendarApi.unselect() // clear date selection
-            if (title) {
-                calendarApi.addEvent({
-                    id: createEventId(),
-                    title,
-                    start: selectInfo.startStr,
-                    end: selectInfo.endStr,
-                    allDay: selectInfo.allDay
-                })
-            }
+            this.event = []
+            console.log(selectInfo)
+            this.event.startDate = (selectInfo.start.getFullYear() 
+                + '-' + selectInfo.start.getMonth()
+                + '-' + selectInfo.start.getDate())
+            this.event.endDate = (selectInfo.end.getFullYear() 
+                + '-' + selectInfo.end.getMonth()
+                + '-' + selectInfo.end.getDate())
+            this.event.startTime = (selectInfo.start.getHours() + ':' + selectInfo.start.getMinutes())
+            this.event.endTime = (selectInfo.end.getHours() + ':' + selectInfo.end.getMinutes())
+            this.$bvModal.show('modal-new-schedule')
         },
         handleEventClick(clickInfo) {
-            console.log(clickInfo)
-
-            // ScheduleDataService.get(clickInfo)
-            //     .then(response => {
-            //         this.event.id = response.data.id,
-            //         this.event.title = response.data.title,
-            //         this.event.description = response.data.description,
-            //         this.event.start = response.data.beginning_date,
-            //         this.event.end = response.data.conclusion_date,
-            //         this.event.duration = response.data.duration,
-            //         this.event.requester = response.data.requester,
-            //         this.event.guest = response.data.guest,
-            //         this.event.accept = response.data.accept,
-            //         console.log(response)
-            //     })
-            //     .catch(e => {
-            //         console.log(e)
-            //     })
+            ScheduleDataService.get(clickInfo.event.id)
+                .then(response => {
+                    this.event = []
+                    this.event.id = response.data.id
+                    this.event.title = response.data.title
+                    this.event.description = response.data.description
+                    this.event.startDate = response.data.start_date
+                    this.event.endDate = response.data.end_date
+                    this.event.startTime = response.data.start_time
+                    this.event.endTime = response.data.end_time
+                    this.event.duration = response.data.duration
+                    this.event.requester = response.data.requester
+                    this.event.guest = response.data.guest
+                    this.event.accept = response.data.accept
+                    console.log(this.event)
+                })
+                .catch(e => {
+                    console.log(e)
+                })
             
-            // this.$bvModal.show('modal-schedule');
+            this.$bvModal.show('modal-schedule');
         },
         handleEvents(events) {
             this.currentEvents = events
         }
-    },
-    mounted() {
-        this.getEvents()
     }
 }
 </script>

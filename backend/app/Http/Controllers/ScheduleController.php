@@ -66,6 +66,11 @@ class ScheduleController extends Controller
     public function show($id)
     {
         $schedule = $this->schedule_services->one($id);
+        $schedule['start_date'] = date('d/m/Y', strtotime($schedule['start']));
+        $schedule['end_date'] = date('d/m/Y', strtotime($schedule['end']));
+        $schedule['start_time'] = date('H:i', strtotime($schedule['start']));
+        $schedule['end_time'] = date('H:i', strtotime($schedule['end']));
+        $schedule['duration'] = date('H:i', strtotime($schedule['duration']));
         return response()->json($schedule);
     }
 
