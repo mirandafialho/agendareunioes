@@ -2,20 +2,22 @@
 	<div class="collaborator">
 		<h1>Colaboradores</h1>
 		<hr>
-		<ListCollaborator />
+		<Collaborators />
 	</div>
 </template>
 
 <script>
-import ListCollaborator from '@/components/Collaborator/ListCollaborator.vue'
+import Collaborators from '@/components/Collaborator/Collaborators.vue'
 
 export default {
 	components: { 
-		ListCollaborator
+		Collaborators
 	}
 }
 </script>
 
 <style>
-
+	.collaborator {
+        margin: 50px 50px;
+    }
 </style>

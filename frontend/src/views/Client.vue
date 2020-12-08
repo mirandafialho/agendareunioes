@@ -1,24 +1,22 @@
 <template>
 	<div class="client">
 		<h1>Clientes</h1>
-		<hr>
-		<ListClient />
-		<!--<AddClient />-->
+		<Clients />
 	</div>
 </template>
 
 <script>
-import ListClient from '@/components/Client/ListClient.vue'
-//import AddClient from '@/components/Client/AddClient.vue'
+import Clients from '@/components/Client/Clients.vue'
 
 export default {
 	components: { 
-		ListClient,
-		//AddClient
+		Clients,
 	}
 }
 </script>
 
 <style>
-
+	.client {
+        margin: 25px 50px;
+    }
 </style>

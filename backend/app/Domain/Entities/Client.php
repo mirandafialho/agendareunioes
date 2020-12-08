@@ -20,4 +20,16 @@ class Client extends Model
 	 */
 	protected $table = 'clients';
 	
+	/**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'email',
+		'phone',
+		'cellphone',
+		'active'
+    ];
 }

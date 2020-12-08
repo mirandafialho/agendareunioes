@@ -15,5 +15,5 @@ interface IClientService
 	public function all(): Collection;
 	public function one($id): Client;
 	public function save($id = null, array $data): Client;
-	public function delete($id): Client;
+	public function delete($id): bool;
 } 

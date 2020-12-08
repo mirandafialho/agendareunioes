@@ -41,7 +41,7 @@ class ClientController extends Controller
      */
     public function store(Request $request)
     {
-        $client = $this->client_service->save([
+        $client = $this->client_service->save($request->id, [
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,

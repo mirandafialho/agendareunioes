@@ -2,20 +2,22 @@
 	<div class="partner">
 		<h1>Sócios</h1>
 		<hr>
-		<ListPartner />
+		<Partners />
 	</div>
 </template>
 
 <script>
-import ListPartner from '@/components/Partner/ListPartner.vue'
+import Partners from '@/components/Partner/Partners.vue'
 
 export default {
 	components: { 
-		ListPartner
+		Partners
 	}
 }
 </script>
 
 <style>
-
+	.partner {
+        margin: 50px 50px;
+    }
 </style>

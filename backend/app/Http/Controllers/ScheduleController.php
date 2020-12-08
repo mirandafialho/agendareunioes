@@ -41,10 +41,11 @@ class ScheduleController extends Controller
      */
     public function store(Request $request)
     {
-        $schedule = $this->schedule_services->save([
-            'beginning_date' => $request->beginning_date,
-            'conclusion_date' => $request->conclusion_date,
+        $schedule = $this->schedule_services->save($request->id, [
+            'start' => $request->start,
+            'end' => $request->end,
             'duration' => $request->duration,
+            'title' => $request->title,
             'description' => $request->description,
             'guest_client_id' => $request->guest_client_id,
             'guest_collaborator_id' => $request->guest_collaborator_id,
@@ -78,9 +79,10 @@ class ScheduleController extends Controller
     public function update(Request $request, $id)
     {
         $schedule = $this->schedule_services->save($id, [
-            'beginning_date' => $request->beginning_date,
-            'conclusion_date' => $request->conclusion_date,
+            'start' => $request->start,
+            'end' => $request->end,
             'duration' => $request->duration,
+            'title' => $request->title,
             'description' => $request->description,
             'guest_client_id' => $request->guest_client_id,
             'guest_collaborator_id' => $request->guest_collaborator_id,

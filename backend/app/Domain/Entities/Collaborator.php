@@ -21,5 +21,18 @@ class Collaborator extends Model
 	 */
 	protected $table = 'collaborators';
 
-	
+	/**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name',
+        'email',
+		'phone',
+		'cellphone',
+		'user_id',
+		'partner',
+		'active'
+    ];
 }

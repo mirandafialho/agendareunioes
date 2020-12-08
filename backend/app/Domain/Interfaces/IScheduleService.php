@@ -15,5 +15,5 @@ interface IScheduleService
 	public function all(): Collection;
 	public function one($id): Schedule;
 	public function save($id = null, array $data): Schedule;
-	public function delete($id): Schedule;
+	public function delete($id): bool;
 } 

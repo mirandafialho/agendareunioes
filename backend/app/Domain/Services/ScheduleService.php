@@ -31,9 +31,9 @@ class ScheduleService implements IScheduleService
      * Deletar um registro de agenda.
      *
      * @var integer $id
-     * @return Schedule
+     * @return bool
      */
-    public function delete($id): Schedule
+    public function delete($id): bool
     {
         $schedule = Schedule::findOrFail($id);
         return $schedule->delete();
