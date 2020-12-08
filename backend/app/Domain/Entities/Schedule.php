@@ -22,4 +22,21 @@ class Schedule extends Model
 	 */
 	protected $table = 'schedules';
 	
+	/**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'start',
+		'end',
+		'duration',
+		'title',
+		'description',
+		'guest_client_id',
+		'guest_collaborator_id',
+		'requester_client_id',
+		'requester_collaborator_id',
+		'accept'
+    ];
 }

@@ -16,6 +16,7 @@
         "laravel/passport": "^10.1",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^3.1",
+        "nesbot/carbon": "^2.42",
         "spatie/laravel-permission": "^3.18"
     },
     "require-dev": {

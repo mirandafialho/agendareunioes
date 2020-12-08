@@ -5,6 +5,13 @@
         <FullCalendar />
     </div> -->
     <div class='demo-app'>
+        <b-alert variant="success" :show="showSuccessAlert" dismissible>
+            <span>{{ message }}</span>
+        </b-alert>
+        <b-alert variant="warning" :show="showWarningAlert" dismissible>
+            <span>{{ message }}</span>
+            Houve um problema com os dados da sua reunião. Por favor, contate o suporte.
+        </b-alert>
         <div class='demo-app-sidebar'>
             <div class='demo-app-sidebar-section'>
                 <h2>Instructions</h2>
@@ -61,7 +68,7 @@
             </p>
         </b-modal>
         <b-modal id="modal-new-schedule" ref="modal-new-schedule" title="Novo Evento" hide-footer>
-            <b-form>
+            <b-form @submit="onSubmit" @reset="onReset" v-if="show">
                 <b-form-input id="schedule-id" v-model="event.id" hidden="hidden"></b-form-input>
                 <b-form-group id="input-group-2" label="Título:" label-for="titulo">
                     <b-form-input
@@ -164,6 +171,7 @@ export default {
                 selectMirror: true,
                 dayMaxEvents: true,
                 weekends: false,
+                timeFormat: 'H(:mm)',
                 select: this.handleDateSelect,
                 eventClick: this.handleEventClick,
                 eventsSet: this.handleEvents
@@ -173,7 +181,31 @@ export default {
                 eventRemove:
                 */
             },
-            event: [],
+            event: {
+                id: null,
+                title: '',
+                description: '',
+                startDate: null,
+                endDate: null,
+                startTime: null,
+                endTime: null,
+                duration: null,
+                requester: null,
+                guest: null,
+                accept: null
+            },
+            form: {
+                id: null,
+                email: '',
+                name: '',
+                phone: '',
+                cellphone: '',
+                active: 0
+            },
+            show: true,
+            showSuccessAlert: false,
+            showWarningAlert: false,
+            message: ''
         }
     },
     created() {
@@ -191,22 +223,32 @@ export default {
                 })
         },
         handleDateSelect(selectInfo) {
-            this.event = []
-            console.log(selectInfo)
             this.event.startDate = (selectInfo.start.getFullYear() 
-                + '-' + selectInfo.start.getMonth()
-                + '-' + selectInfo.start.getDate())
+                + '-' + (selectInfo.start.getMonth() + 1)
+                + '-' + 
+                (selectInfo.start.getDate() < 10 ? '0' : '') + selectInfo.start.getDate()
+            )
             this.event.endDate = (selectInfo.end.getFullYear() 
-                + '-' + selectInfo.end.getMonth()
-                + '-' + selectInfo.end.getDate())
-            this.event.startTime = (selectInfo.start.getHours() + ':' + selectInfo.start.getMinutes())
-            this.event.endTime = (selectInfo.end.getHours() + ':' + selectInfo.end.getMinutes())
+                + '-' + (selectInfo.end.getMonth() + 1)
+                + '-' + 
+                (selectInfo.end.getDate() < 10 ? '0' : '') + selectInfo.end.getDate()
+            )
+            this.event.startTime = (
+                selectInfo.start.getHours() + 
+                ':' + 
+                (selectInfo.start.getMinutes() < 10 ? '0' : '') + selectInfo.start.getMinutes()
+            )
+            this.event.endTime = (
+                selectInfo.end.getHours() + 
+                ':' + 
+                (selectInfo.end.getMinutes() < 10 ? '0' : '') + selectInfo.end.getMinutes()
+            )
             this.$bvModal.show('modal-new-schedule')
         },
         handleEventClick(clickInfo) {
             ScheduleDataService.get(clickInfo.event.id)
                 .then(response => {
-                    this.event = []
+                    this.event = ''
                     this.event.id = response.data.id
                     this.event.title = response.data.title
                     this.event.description = response.data.description
@@ -225,6 +267,75 @@ export default {
                 })
             
             this.$bvModal.show('modal-schedule');
+        },
+        onSubmit(event) {
+            event.preventDefault()
+
+            var data = {
+                id: this.event.id,
+                title: this.event.title,
+                description: this.event.description,
+                start: this.event.startDate + ' ' + this.event.startTime,
+                end: this.event.endDate + ' ' + this.event.endTime,
+                requester: this.event.requester,
+                guest: this.event.guest,
+                accept: null
+            }
+
+            if (this.event.id !== null) {
+                this.message = "Reunião editada com sucesso."
+            } else {
+                this.message = "Reunião cadastrada com sucesso."
+            }
+
+            //console.log(data);
+
+            ScheduleDataService.create(data)
+                .then(response => {
+                    this.event.id = response.data.id
+                    console.log(response.data)
+
+                    // Limpar o formulário.
+                    this.form.id = null
+                    this.form.title = ''
+                    this.form.description = ''
+                    this.form.startDate = ''
+                    this.form.endDate = ''
+                    this.form.startTime = ''
+                    this.form.endTime = ''
+                    
+                    // Esconder o modal
+                    this.$bvModal.hide('modal-new-schedule');
+
+                    this.getEvents()
+
+                    // Retornar a mensagem.
+                    this.showSuccessAlert = true
+                })
+                .catch(e => {
+                    this.showWarningAlert = true
+
+                    console.log(e);
+                })
+
+        },
+        onReset(event) {
+            event.preventDefault()
+
+            // Reset form values
+            this.form.id = null
+            this.form.name = ''
+            this.form.email = ''
+            this.form.phone = ''
+            this.form.cellphone = ''
+            this.form.active = 0
+
+            // Trick to reset/clear native browser form validation state
+            this.show = false
+
+            this.$nextTick(() => {
+                this.show = true
+            })
         },
         handleEvents(events) {
             this.currentEvents = events

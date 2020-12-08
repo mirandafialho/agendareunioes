@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Domain\Services\ScheduleService;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class ScheduleController extends Controller
 {
@@ -41,10 +42,14 @@ class ScheduleController extends Controller
      */
     public function store(Request $request)
     {
+        $start = Carbon::createFromFormat('Y-m-d H:i', $request->start);
+        $end = Carbon::createFromFormat('Y-m-d H:i', $request->end);
+        $diff_hours = $start->diffInHours($end);
+
         $schedule = $this->schedule_services->save($request->id, [
             'start' => $request->start,
             'end' => $request->end,
-            'duration' => $request->duration,
+            'duration' => date('H:i:s', $diff_hours),
             'title' => $request->title,
             'description' => $request->description,
             'guest_client_id' => $request->guest_client_id,
