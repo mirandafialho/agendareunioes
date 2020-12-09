@@ -42,14 +42,13 @@ class ScheduleController extends Controller
      */
     public function store(Request $request)
     {
-        $start = Carbon::createFromFormat('Y-m-d H:i', $request->start);
-        $end = Carbon::createFromFormat('Y-m-d H:i', $request->end);
-        $diff_hours = $start->diffInHours($end);
+        $start = Carbon::createFromFormat('Y-m-d H:i:s', $request->start);
+        $end = Carbon::createFromFormat('Y-m-d H:i:s', $request->end);
 
         $schedule = $this->schedule_services->save($request->id, [
             'start' => $request->start,
             'end' => $request->end,
-            'duration' => date('H:i:s', $diff_hours),
+            'duration' => $end->diffInHours($start) . ':' . $end->diffInMinutes($start) . ':00',
             'title' => $request->title,
             'description' => $request->description,
             'guest_client_id' => $request->guest_client_id,
@@ -71,11 +70,20 @@ class ScheduleController extends Controller
     public function show($id)
     {
         $schedule = $this->schedule_services->one($id);
-        $schedule['start_date'] = date('d/m/Y', strtotime($schedule['start']));
-        $schedule['end_date'] = date('d/m/Y', strtotime($schedule['end']));
-        $schedule['start_time'] = date('H:i', strtotime($schedule['start']));
-        $schedule['end_time'] = date('H:i', strtotime($schedule['end']));
-        $schedule['duration'] = date('H:i', strtotime($schedule['duration']));
+        
+        $schedule['start'] = Carbon::createFromFormat(
+            'Y-m-d H:i:s', 
+            $schedule['start']
+        )->format('d/m/Y H:i');
+        $schedule['end'] = Carbon::createFromFormat(
+            'Y-m-d H:i:s', 
+            $schedule['end']
+        )->format('d/m/Y H:i');
+        $schedule['duration'] = Carbon::createFromFormat(
+            'H:i:s', 
+            $schedule['duration']
+        )->format('H:i');
+
         return response()->json($schedule);
     }
 

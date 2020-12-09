@@ -66,6 +66,14 @@
                 <b>Aceito: </b>
                 <span>{{ event.accept ? 'Sim' : 'Não' }}</span>
             </p>
+            <b-button-group>
+                <b-button variant="success" size="sm" @click="editEvent(event.id)">
+                    <b-icon-pencil-square></b-icon-pencil-square> Editar
+                </b-button>
+                <b-button variant="danger" size="sm" @click="removeEvent(event.id)">
+                    <b-icon-trash></b-icon-trash> Excluir
+                </b-button>
+            </b-button-group>
         </b-modal>
         <b-modal id="modal-new-schedule" ref="modal-new-schedule" title="Novo Evento" hide-footer>
             <b-form @submit="onSubmit" @reset="onReset" v-if="show">
@@ -140,7 +148,7 @@ import FullCalendar from '@fullcalendar/vue'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import brLocale from "@fullcalendar/core/locales/pt-br";
+import brLocale from '@fullcalendar/core/locales/pt-br';
 import ScheduleDataService from '@/services/ScheduleDataService'
 
 export default {
@@ -166,7 +174,7 @@ export default {
                 events: [],
                 eventColor: '#2c3e50',
                 navLinks: true,
-                editable: true,
+                editable: false,
                 selectable: true,
                 selectMirror: true,
                 dayMaxEvents: true,
@@ -194,14 +202,6 @@ export default {
                 guest: null,
                 accept: null
             },
-            form: {
-                id: null,
-                email: '',
-                name: '',
-                phone: '',
-                cellphone: '',
-                active: 0
-            },
             show: true,
             showSuccessAlert: false,
             showWarningAlert: false,
@@ -223,39 +223,20 @@ export default {
                 })
         },
         handleDateSelect(selectInfo) {
-            this.event.startDate = (selectInfo.start.getFullYear() 
-                + '-' + (selectInfo.start.getMonth() + 1)
-                + '-' + 
-                (selectInfo.start.getDate() < 10 ? '0' : '') + selectInfo.start.getDate()
-            )
-            this.event.endDate = (selectInfo.end.getFullYear() 
-                + '-' + (selectInfo.end.getMonth() + 1)
-                + '-' + 
-                (selectInfo.end.getDate() < 10 ? '0' : '') + selectInfo.end.getDate()
-            )
-            this.event.startTime = (
-                selectInfo.start.getHours() + 
-                ':' + 
-                (selectInfo.start.getMinutes() < 10 ? '0' : '') + selectInfo.start.getMinutes()
-            )
-            this.event.endTime = (
-                selectInfo.end.getHours() + 
-                ':' + 
-                (selectInfo.end.getMinutes() < 10 ? '0' : '') + selectInfo.end.getMinutes()
-            )
+            this.event.startDate = formatDate(selectInfo.start)
+            this.event.endDate = formatDate(selectInfo.end)
+            this.event.startTime = formatTime(selectInfo.start)
+            this.event.endTime = formatTime(selectInfo.end)
             this.$bvModal.show('modal-new-schedule')
         },
         handleEventClick(clickInfo) {
             ScheduleDataService.get(clickInfo.event.id)
                 .then(response => {
-                    this.event = ''
                     this.event.id = response.data.id
                     this.event.title = response.data.title
                     this.event.description = response.data.description
-                    this.event.startDate = response.data.start_date
-                    this.event.endDate = response.data.end_date
-                    this.event.startTime = response.data.start_time
-                    this.event.endTime = response.data.end_time
+                    this.event.start = response.data.start
+                    this.event.end = response.data.end
                     this.event.duration = response.data.duration
                     this.event.requester = response.data.requester
                     this.event.guest = response.data.guest
@@ -288,21 +269,23 @@ export default {
                 this.message = "Reunião cadastrada com sucesso."
             }
 
-            //console.log(data);
-
             ScheduleDataService.create(data)
                 .then(response => {
                     this.event.id = response.data.id
                     console.log(response.data)
 
                     // Limpar o formulário.
-                    this.form.id = null
-                    this.form.title = ''
-                    this.form.description = ''
-                    this.form.startDate = ''
-                    this.form.endDate = ''
-                    this.form.startTime = ''
-                    this.form.endTime = ''
+                    this.event.id = null,
+                    this.event.title = '',
+                    this.event.description = '',
+                    this.event.startDate = null,
+                    this.event.endDate = null,
+                    this.event.startTime = null,
+                    this.event.endTime = null,
+                    this.event.duration = null,
+                    this.event.requester = null,
+                    this.event.guest = null,
+                    this.event.accept = null
                     
                     // Esconder o modal
                     this.$bvModal.hide('modal-new-schedule');
@@ -319,16 +302,86 @@ export default {
                 })
 
         },
+        editEvent(id) {
+            ScheduleDataService.get(id)
+                .then(response => {
+                    this.event.id = response.data.id
+                    this.event.title = response.data.title
+                    this.event.description = response.data.description
+
+                    var start_date = response.data.start.split(' ')[0].split('/')
+                    this.event.startDate = formatDate(
+                        new Date(start_date[2], start_date[1] - 1, start_date[0])
+                    )
+
+                    var end_date = response.data.end.split(' ')[0].split('/')
+                    this.event.endDate = formatDate(
+                        new Date(end_date[2], end_date[1] - 1, end_date[0])
+                    )
+
+                    this.event.startTime = formatTime(
+                        new Date('1970-01-01 ' + response.data.start.split(' ')[1])
+                    )
+
+                    this.event.endTime = formatTime(
+                        new Date('1970-01-01 ' + response.data.end.split(' ')[1])
+                    )
+
+                    this.event.duration = response.data.duration
+                    this.event.requester = response.data.requester
+                    this.event.guest = response.data.guest
+                    this.event.accept = response.data.accept
+                    console.log(response)
+                })
+                .catch(e => {
+                    console.log(e)
+                })
+            
+            this.$bvModal.show('modal-new-schedule');
+        },
+        removeEvent(id) {
+            this.$bvModal.msgBoxConfirm('Você tem certeza?', {
+                title: 'Por favor, confirme.',
+                size: 'sm',
+                buttonSize: 'sm',
+                okVariant: 'danger',
+                okTitle: 'Sim',
+                cancelTitle: 'Não',
+                footerClass: 'p-2',
+                hideHeaderClose: false,
+                centered: true
+            })
+                .then(value => {
+                    if (value) {
+                        ScheduleDataService.delete(id)
+                            .then(response => {
+                                console.log(response)
+                                this.getEvents()
+                                this.$bvModal.hide('modal-schedule');
+                                // Retornar a mensagem.
+                                this.message = "Evento removido com sucesso."
+                                this.showSuccessAlert = true
+                            })
+                            .catch(e => {
+                                console.log(e)
+                            })
+                    }
+                })
+                .catch(e => {
+                    console.log(e)
+                })
+        },
         onReset(event) {
             event.preventDefault()
 
             // Reset form values
-            this.form.id = null
-            this.form.name = ''
-            this.form.email = ''
-            this.form.phone = ''
-            this.form.cellphone = ''
-            this.form.active = 0
+            this.event.id = null,
+            this.event.title = '',
+            this.event.description = '',
+            // this.event.duration = null,
+            // this.event.requester = null,
+            // this.event.guest = null,
+            // this.event.accept = null
 
             // Trick to reset/clear native browser form validation state
             this.show = false
@@ -342,6 +395,30 @@ export default {
         }
     }
 }
+
+/**
+ * Função para formatação de data.
+ */
+function formatDate(date) {
+    return date.getFullYear() 
+        + '-' + 
+        (date.getMonth() + 1)
+        + '-' + 
+        (date.getDate() < 10 ? '0' : '') + date.getDate();
+}
+
+/**
+ * Função para formatação de tempo.
+ */
+function formatTime(time) {
+    console.log(time);
+    return time.getHours() + 
+        ':' + 
+        (time.getMinutes() < 10 ? '0' : '') + time.getMinutes() +
+        ':' +
+        (time.getSeconds() < 10 ? '0' : '') + time.getSeconds();
+}
+
 </script>
 
 <style>
