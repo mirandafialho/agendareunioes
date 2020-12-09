@@ -62,7 +62,9 @@ export default {
 
             LoginService.login(data)
                 .then(response => {
-                    console.log(response.data)
+                    const token = response.data.access_token
+                    localStorage.setItem('access_token', token)
+                    this.$router.push({ name: 'Home' })
                 })
                 .catch(e => {
                     console.log(e);

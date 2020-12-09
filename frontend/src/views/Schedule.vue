@@ -4,7 +4,7 @@
         <hr>
         <FullCalendar />
     </div> -->
-    <div class='demo-app'>
+    <div class='schedule-app'>
         <b-alert variant="success" :show="showSuccessAlert" dismissible>
             <span>{{ message }}</span>
         </b-alert>
@@ -12,19 +12,9 @@
             <span>{{ message }}</span>
             Houve um problema com os dados da sua reunião. Por favor, contate o suporte.
         </b-alert>
-        <div class='demo-app-sidebar'>
-            <div class='demo-app-sidebar-section'>
-                <h2>Instructions</h2>
-                <ul class="demo-app-instructions">
-                    <li>Select dates and you will be prompted to create a new event</li>
-                    <li>Drag, drop, and resize events</li>
-                    <li>Click an event to delete it</li>
-                </ul>
-            </div>
-        </div>
-        <div class='demo-app-main'>
+        <div class='schedule-app-main'>
             <FullCalendar
-                class='demo-app-calendar'
+                class='schedule-app-calendar'
                 :options='calendarOptions'
             >
                 <template v-slot:eventContent='arg'>
@@ -445,25 +435,14 @@ function formatTime(time) {
         margin-right: 3px;
     }
 
-    .demo-app {
+    .schedule-app {
         display: flex;
         min-height: 100%;
         font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
         font-size: 14px;
     }
-
-    .demo-app-sidebar {
-        width: 300px;
-        line-height: 1.5;
-        background: #eaf9ff;
-        border-right: 1px solid #d3e2e8;
-    }
-
-    .demo-app-sidebar-section {
-        padding: 2em;
-    }
     
-    .demo-app-main {
+    .schedule-app-main {
         flex-grow: 1;
         padding: 3em;
     }

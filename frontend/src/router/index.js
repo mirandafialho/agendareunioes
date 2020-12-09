@@ -2,6 +2,11 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Login from '../views/Login.vue'
+import About from '../views/About.vue'
+import Schedule from '../views/Schedule.vue'
+import Client from '../views/Client.vue'
+import Collaborator from '../views/Collaborator.vue'
+import Partner from '../views/Partner.vue'
 
 Vue.use(VueRouter)
 
@@ -25,21 +30,16 @@ const routes = [
 	{
 		path: '/about',
 		name: 'About',
-		// route level code-splitting
-		// this generates a separate chunk (about.[hash].js) for this route
-		// which is lazy-loaded when the route is visited.
-		component: () => import(/* webpackChunkName: "about" */ '../views/About.vue'),
+		component: About,
 		meta: {
-			isAuthenticated: false
+			isAuthenticated: false,
+			guest: true
 		}
 	},
 	{
 		path: '/schedule',
 		name: 'Schedule',
-		// route level code-splitting
-		// this generates a separate chunk (about.[hash].js) for this route
-		// which is lazy-loaded when the route is visited.
-		component: () => import(/* webpackChunkName: "about" */ '../views/Schedule.vue'),
+		component: Schedule,
 		meta: {
 			isAuthenticated: true
 		}
@@ -47,10 +47,7 @@ const routes = [
 	{
 		path: '/client',
 		name: 'Client',
-		// route level code-splitting
-		// this generates a separate chunk (about.[hash].js) for this route
-		// which is lazy-loaded when the route is visited.
-		component: () => import(/* webpackChunkName: "about" */ '../views/Client.vue'),
+		component: Client,
 		meta: {
 			isAuthenticated: true
 		}
@@ -58,10 +55,7 @@ const routes = [
 	{
 		path: '/collaborator',
 		name: 'Collaborator',
-		// route level code-splitting
-		// this generates a separate chunk (about.[hash].js) for this route
-		// which is lazy-loaded when the route is visited.
-		component: () => import(/* webpackChunkName: "about" */ '../views/Collaborator.vue'),
+		component: Collaborator,
 		meta: {
 			isAuthenticated: true
 		}
@@ -69,10 +63,7 @@ const routes = [
 	{
 		path: '/partner',
 		name: 'Partner',
-		// route level code-splitting
-		// this generates a separate chunk (about.[hash].js) for this route
-		// which is lazy-loaded when the route is visited.
-		component: () => import(/* webpackChunkName: "about" */ '../views/Partner.vue'),
+		component: Partner,
 		meta: {
 			isAuthenticated: true
 		}
@@ -87,38 +78,17 @@ const router = new VueRouter({
 
 // GOOD
 router.beforeEach((to, from, next) => {
-	// if(to.matched.some(record => record.meta.requiresAuth)) {
-    //     if (localStorage.getItem('jwt') == null) {
-    //         next({
-    //             path: '/login',
-    //             params: { nextUrl: to.fullPath }
-    //         })
-    //     } else {
-    //         let user = JSON.parse(localStorage.getItem('user'))
-    //         if(to.matched.some(record => record.meta.is_admin)) {
-    //             if(user.is_admin == 1){
-    //                 next()
-    //             }
-    //             else{
-    //                 next({ name: 'userboard'})
-    //             }
-    //         }else {
-    //             next()
-    //         }
-	// 	}
-		
-    // } else if(to.matched.some(record => record.meta.guest)) {
-    //     if(localStorage.getItem('jwt') == null){
-    //         next()
-    //     }
-    //     else{
-    //         next({ name: 'userboard'})
-    //     }
-    // } else {
-    //     next()
-    // }
-	if (to.name !== 'Login' && to.matched.some(record => record.meta.isAuthenticated)) next({ name: 'Login' })
-	else next()
+	if (to.matched.some(record => record.meta.isAuthenticated)) {
+        if (localStorage.getItem('access_token') == null) {
+            next({
+                path: '/login'
+            })
+        } else {
+			next()
+		}
+    } else {
+        next()
+    }
 })
 
 export default router

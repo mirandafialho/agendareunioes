@@ -9,7 +9,7 @@
 
 				<!-- Right aligned nav items -->
 				<b-navbar-nav class="ml-auto">
-					<b-navbar-nav right>	
+					<b-navbar-nav right v-if="logged">	
 						<b-nav-item href="#">
 							<router-link to="/">Início</router-link>
 						</b-nav-item>
@@ -21,19 +21,19 @@
 						</b-nav-item>
 					</b-navbar-nav>
 
-					<b-nav-item-dropdown  text="Cadastros" right>
+					<b-nav-item-dropdown text="Cadastros" right v-if="logged">
 						<b-dropdown-item href="/client">Cliente</b-dropdown-item>
-						<b-dropdown-item href="/collaborator">Colaborador</b-dropdown-item>
-						<b-dropdown-item href="/partner">Sócio</b-dropdown-item>
+						<!--<b-dropdown-item href="/collaborator">Colaborador</b-dropdown-item>-->
+						<!--<b-dropdown-item href="/partner">Sócio</b-dropdown-item>-->
 					</b-nav-item-dropdown>
 
-					<b-nav-item-dropdown right >
+					<b-nav-item-dropdown right v-if="logged">
 						<!-- Using 'button-content' slot -->
 						<template #button-content>
 							Usuário
 						</template>
-						<b-dropdown-item href="#">Perfil</b-dropdown-item>
-						<b-dropdown-item href="#">Sair</b-dropdown-item>
+						<!--<b-dropdown-item href="#">Perfil</b-dropdown-item>-->
+						<b-dropdown-item href="#" @click="logout">Sair</b-dropdown-item>
 					</b-nav-item-dropdown>
 				</b-navbar-nav>
 			</b-collapse>
@@ -52,13 +52,36 @@
 </template>
 
 <script>
+//import Login from '@/views/Login'
+import LoginService from '@/services/LoginService'
+
 export default {
 	name: 'App',
 	data() {
 		return {
-			socio: true,
-			administrador: true,
-			cliente: true,
+			partner: true,
+			administrator: true,
+			client: true
+		}
+	},
+	methods: {
+		logout() {
+			if (this.$store.getters.loggedIn) {
+				LoginService.logout()
+					.then(response => {
+						console.log(response)
+						localStorage.removeItem('access_token')
+						this.$router.push({ name: 'Login' })
+					})
+					.catch(e => {
+						console.log(e);
+					})
+			}
+		}
+	},
+	computed: {
+		logged() {
+			return this.$store.getters.loggedIn
 		}
 	}
 }	
