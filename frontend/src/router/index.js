@@ -117,7 +117,7 @@ router.beforeEach((to, from, next) => {
     // } else {
     //     next()
     // }
-	if (to.name !== 'Login' && to.matched.some(record => record.meta.isAuthenticated)) next({ name: 'Login'})
+	if (to.name !== 'Login' && to.matched.some(record => record.meta.isAuthenticated)) next({ name: 'Login' })
 	else next()
 })
 

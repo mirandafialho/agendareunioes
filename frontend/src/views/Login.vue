@@ -4,7 +4,7 @@
             <b-form-row>
                 <b-col></b-col>
                 <b-col>
-                    <b-form @submit="login" v-if="show">
+                    <b-form @submit.prevent="login" v-if="show">
                         <b-form-group
                             id="input-group-1"
                             label="E-mail:"
@@ -42,6 +42,8 @@
 </template>
 
 <script>
+import LoginService from '@/services/LoginService'
+
 export default {
     name: 'Login',
     data() {
@@ -53,7 +55,18 @@ export default {
     },
     methods: {
         login() {
-            console.log(this)
+            var data = {
+                username: this.email,
+                password: this.password
+            }
+
+            LoginService.login(data)
+                .then(response => {
+                    console.log(response.data)
+                })
+                .catch(e => {
+                    console.log(e);
+                })
         }
     }
 }

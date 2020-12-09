@@ -16,18 +16,18 @@
 						<b-nav-item href="#">
 							<router-link to="/about">Sobre</router-link>
 						</b-nav-item>
-						<b-nav-item href="#" v-if="isAuhenticated">
+						<b-nav-item href="#" >
 							<router-link to="/schedule">Agenda</router-link>
 						</b-nav-item>
 					</b-navbar-nav>
 
-					<b-nav-item-dropdown v-if="isAuhenticated" text="Cadastros" right>
+					<b-nav-item-dropdown  text="Cadastros" right>
 						<b-dropdown-item href="/client">Cliente</b-dropdown-item>
 						<b-dropdown-item href="/collaborator">Colaborador</b-dropdown-item>
 						<b-dropdown-item href="/partner">Sócio</b-dropdown-item>
 					</b-nav-item-dropdown>
 
-					<b-nav-item-dropdown right v-if="isAuhenticated">
+					<b-nav-item-dropdown right >
 						<!-- Using 'button-content' slot -->
 						<template #button-content>
 							Usuário
@@ -58,7 +58,7 @@ export default {
 		return {
 			socio: true,
 			administrador: true,
-			cliente: true
+			cliente: true,
 		}
 	}
 }	
