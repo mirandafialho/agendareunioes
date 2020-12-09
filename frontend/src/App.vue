@@ -11,29 +11,29 @@
 				<b-navbar-nav class="ml-auto">
 					<b-navbar-nav right>	
 						<b-nav-item href="#">
-							<router-link to="/">Home</router-link>
+							<router-link to="/">Início</router-link>
 						</b-nav-item>
 						<b-nav-item href="#">
-							<router-link to="/about">About</router-link>
+							<router-link to="/about">Sobre</router-link>
 						</b-nav-item>
-						<b-nav-item href="#">
+						<b-nav-item href="#" v-if="isAuhenticated">
 							<router-link to="/schedule">Agenda</router-link>
 						</b-nav-item>
 					</b-navbar-nav>
 
-					<b-nav-item-dropdown v-if="socio" text="Cadastros" right>
+					<b-nav-item-dropdown v-if="isAuhenticated" text="Cadastros" right>
 						<b-dropdown-item href="/client">Cliente</b-dropdown-item>
 						<b-dropdown-item href="/collaborator">Colaborador</b-dropdown-item>
 						<b-dropdown-item href="/partner">Sócio</b-dropdown-item>
 					</b-nav-item-dropdown>
 
-					<b-nav-item-dropdown right>
+					<b-nav-item-dropdown right v-if="isAuhenticated">
 						<!-- Using 'button-content' slot -->
 						<template #button-content>
-							User
+							Usuário
 						</template>
-						<b-dropdown-item href="#">Profile</b-dropdown-item>
-						<b-dropdown-item href="#">Sign Out</b-dropdown-item>
+						<b-dropdown-item href="#">Perfil</b-dropdown-item>
+						<b-dropdown-item href="#">Sair</b-dropdown-item>
 					</b-nav-item-dropdown>
 				</b-navbar-nav>
 			</b-collapse>
@@ -70,7 +70,6 @@ export default {
 	font-family: Avenir, Helvetica, Arial, sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-	text-align: center;
 	color: #2c3e50;
 }
 
